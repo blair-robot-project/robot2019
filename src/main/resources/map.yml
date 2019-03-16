@@ -814,7 +814,7 @@ buttons:
 #              climber
 #      action: WHEN_PRESSED
 autoStartupCommand:
-  org.usfirst.frc.team449.robot.commands.autonomous.Auto2018SingleHatch:
+  org.usfirst.frc.team449.robot.commands.autonomous.Auto2019SingleHatch:
     '@id': autoCommand
     adjustCommand:
       org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.commands.AnalogPIDCommand:
