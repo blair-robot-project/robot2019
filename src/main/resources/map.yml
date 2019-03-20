@@ -891,6 +891,12 @@ buttons:
               drive
       action: WHEN_PRESSED
     - button:
+        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+          '@id': secondHatchAutoButton
+          joystick:
+        org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+          mechanismsGamepad
+      command:
         org.usfirst.frc.team449.robot.commands.autonomous.Auto2019DoubleHatch:
           '@id': secondHatchAuto
           hatchMech:
@@ -908,6 +914,8 @@ buttons:
           loadToRevCommand:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: loadToCargoShipRev
           startingSideSwitch:
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput: digitalInput
+      action: WHEN_PRESSED
 #    - button:
 #        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
 #          '@id': testLiftButton
