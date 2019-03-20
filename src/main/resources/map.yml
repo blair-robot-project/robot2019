@@ -901,9 +901,9 @@ buttons:
           '@id': secondHatchAuto
           hatchMech:
               org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple: hatchSolenoid
-          leftLoadToRevCommand:
+          leftToLoadRevCommand:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: leftCargoShipToLoadRev
-          rightLoadToRevCommand:
+          rightToLoadRevCommand:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: rightCargoShipToLoadRev
           toLoadFwdCommand:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabalizedMP: cargoShipToLoadFwd
@@ -911,8 +911,10 @@ buttons:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: leftLoadToCargoShipFwd
           rightLoadToFwdCommand:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: rightLoadToCargoShipFwd
-          loadToRevCommand:
-            org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: loadToCargoShipRev
+          leftLoadToRevCommand:
+            org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: leftLoadToCargoShipRev
+          rightLoadToRevCommand:
+            org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: rightLoadToCargoShipRev
           startingSideSwitch:
             org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput: digitalInput
       action: WHEN_PRESSED

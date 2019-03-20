@@ -39,7 +39,8 @@ public class Auto2019DoubleHatch<T extends Subsystem & SubsystemAHRS & Subsystem
      * @param toLoadFwdCommand The motion profile going to loading station from second hatch location
      * @param leftLoadToFwdCommand The motion profile going to left front hatch from left loading station
      * @param rightLoadToFwdCommand The motion profile going to right front hatch from right loading station
-     * @param loadToRevCommand The reverse profile from loading station backwards
+     * @param leftLoadToRevCommand The reverse profile from the left loading station backwards
+     * @param rightLoadToRevCommand The reverse profile from the right loading station backwards
      */
     @JsonCreator
     public Auto2019DoubleHatch(@Nullable Command adjustCommand,
@@ -49,7 +50,8 @@ public class Auto2019DoubleHatch<T extends Subsystem & SubsystemAHRS & Subsystem
                                @NotNull @JsonProperty(required = true) Command toLoadFwdCommand,
                                @NotNull @JsonProperty(required = true) Command leftLoadToFwdCommand,
                                @NotNull @JsonProperty(required = true) Command rightLoadToFwdCommand,
-                               @NotNull @JsonProperty(required = true) Command loadToRevCommand,
+                               @NotNull @JsonProperty(required = true) Command leftLoadToRevCommand,
+                               @NotNull @JsonProperty(required = true) Command rightLoadToRevCommand,
                                @NotNull @JsonProperty(required = true) MappedDigitalInput startingSideSwitch,
                                @Nullable Pneumatics compressor) {
         if (compressor != null) {
@@ -62,7 +64,7 @@ public class Auto2019DoubleHatch<T extends Subsystem & SubsystemAHRS & Subsystem
         addSequential(new ConditionalCommandDigitalInputBased(leftToLoadRevCommand, rightToLoadRevCommand, startingSideSwitch));
         addSequential(toLoadFwdCommand);
         addSequential(new SolenoidForward(hatchMech));
-        addSequential(loadToRevCommand);
+        addSequential(new ConditionalCommandDigitalInputBased(leftLoadToRevCommand, rightLoadToRevCommand, startingSideSwitch));
         addSequential(new ConditionalCommandDigitalInputBased(leftLoadToFwdCommand, rightLoadToFwdCommand, startingSideSwitch));
         addSequential(new SolenoidReverse(hatchMech));
         if (compressor != null) {
