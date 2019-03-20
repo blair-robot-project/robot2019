@@ -385,12 +385,12 @@ logger:
         '@id': rightLoadToCargoShipFwd
         left:
           '@id': rightLoadToCargoShipFwdLeft
-          filename: "/home/lvuser/449_resources/robot2019LeftLoadToLRProfile.csv"
+          filename: "/home/lvuser/449_resources/robot2019LeftLoadToRFProfile.csv"
           inverted: false
           resetPosition: true
         right:
           '@id': rightLoadToCargoShipFwdRight
-          filename: "/home/lvuser/449_resources/robot2019RightLoadToLRProfile.csv"
+          filename: "/home/lvuser/449_resources/robot2019RightLoadToLFProfile.csv"
           inverted: false
           resetPosition: true
         startAngle: 0
@@ -894,8 +894,9 @@ buttons:
         org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
           '@id': secondHatchAutoButton
           joystick:
-        org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
-          mechanismsGamepad
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+              mechanismsGamepad
+          buttonNumber: 7
       command:
         org.usfirst.frc.team449.robot.commands.autonomous.Auto2019DoubleHatch:
           '@id': secondHatchAuto
@@ -906,7 +907,7 @@ buttons:
           rightToLoadRevCommand:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: rightCargoShipToLoadRev
           toLoadFwdCommand:
-            org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabalizedMP: cargoShipToLoadFwd
+            org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: cargoShipToLoadFwd
           leftLoadToFwdCommand:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: leftLoadToCargoShipFwd
           rightLoadToFwdCommand:
