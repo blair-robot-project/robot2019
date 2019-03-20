@@ -34,9 +34,12 @@ public class Auto2019DoubleHatch<T extends Subsystem & SubsystemAHRS & Subsystem
      * @param hatchMech The hatch mechanism that holds the hatch.
      * @param startingSideSwitch A digitalInput that's true when the robot is on the left side.
      * @param compressor The compressor, which will be turned off for auto. Can be null to not turn off a compressor.
-     * @param leftToLoadRevCommand
-     * @param rightToLoadRevCommand
-     * @param toLoadFwdCommand
+     * @param leftToLoadRevCommand The motion profile command going to the left loading station
+     * @param rightToLoadRevCommand The motion profile command going to the right loading station
+     * @param toLoadFwdCommand The motion profile going to loading station from second hatch location
+     * @param leftLoadToFwdCommand The motion profile going to left front hatch from left loading station
+     * @param rightLoadToFwdCommand The motion profile going to right front hatch from right loading station
+     * @param loadToRevCommand The reverse profile from loading station backwards
      */
     @JsonCreator
     public Auto2019DoubleHatch(@Nullable Command adjustCommand,
