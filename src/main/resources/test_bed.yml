@@ -289,9 +289,34 @@ defaultCommands:
               kP: 0.3
               kI: 0
               kD: 0.0
-#              setpointSupplier:
-#                org.usfirst.frc.team449.robot.components.LimeLightAngularToDistanceComponent:
-#                  angularInput:
+    - subsystem:
+        org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+          '@id': cargoArmPivot
+          motor:
+            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+              '@id': cargoArmPivotMotor
+              port: 10
+              enableBrakeMode: false
+              reverseOutput: false
+              enableVoltageComp: true
+              currentLimit: 30
+      command:
+        org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.commands.ControlAnalogMotorWithThrottle:
+          '@id': cargoArmPivotCommand
+          subsystem:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+              cargoArmPivot
+          throttle:
+            org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+              '@id': cargoArmPivotThrottle
+              axis: 5
+              stick:
+                org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                  '@id': mechanismsGamepad
+                  port: 2
+##            setpointSupplier:
+##               org.usfirst.frc.team449.robot.components.LimeLightAngularToDistanceComponent:
+##                  angularInput:
 ##                      org.usfirst.frc.team449.robot.components.LimelightNavXTargetComponent:
 ##                          ahrs:
 ##                              org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS:
@@ -304,7 +329,7 @@ defaultCommands:
 #                          value: yaw
 #                  distanceToTarget:
 #                    org.usfirst.frc.team449.robot.components.LimeLightDistanceComponentSimple: {}
-              setpoint: 0.0
+              #setpoint: 0.0
 teleopStartupCommand:
   org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.commands.StartCompressor:
     '@id': startCompressor
