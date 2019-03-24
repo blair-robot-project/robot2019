@@ -41,8 +41,7 @@ public class Auto2019DoubleHatch<T extends Subsystem & SubsystemAHRS & Subsystem
      * @param rightLoadToFwdCommand The motion profile going to right front hatch from right loading station
      * @param leftLoadToRevCommand The reverse profile from the left loading station backwards
      * @param rightLoadToRevCommand The reverse profile from the right loading station backwards
-     * @param leftNavXTurnToAngle The command to turn to 90 degrees, used on left side of field to get to loading station
-     * @param rightNavXTurnToAngle The command to turn -90 degrees, used on right side of field to get to loading station
+     * @param NavXTurnToAngleCommand The command to turn to 180 degrees, to get to loading station
      */
     @JsonCreator
     public Auto2019DoubleHatch(@Nullable Command adjustCommand,
@@ -54,8 +53,7 @@ public class Auto2019DoubleHatch<T extends Subsystem & SubsystemAHRS & Subsystem
                                @NotNull @JsonProperty(required = true) Command rightLoadToFwdCommand,
                                @NotNull @JsonProperty(required = true) Command leftLoadToRevCommand,
                                @NotNull @JsonProperty(required = true) Command rightLoadToRevCommand,
-                               @NotNull @JsonProperty(required = true) Command leftNavXTurnToAngle,
-                               @NotNull @JsonProperty(required = true) Command rightNavXTurnToAngle,
+                               @NotNull @JsonProperty(required = true) Command NavXTurnToAngleCommand,
                                @NotNull @JsonProperty(required = true) MappedDigitalInput startingSideSwitch,
                                @Nullable Pneumatics compressor) {
         if (compressor != null) {
@@ -66,7 +64,7 @@ public class Auto2019DoubleHatch<T extends Subsystem & SubsystemAHRS & Subsystem
         }
         addParallel(new SetTracking(true));
         addSequential(new ConditionalCommandDigitalInputBased(leftToLoadRevCommand, rightToLoadRevCommand, startingSideSwitch));
-        addSequential(new ConditionalCommandDigitalInputBased(leftNavXTurnToAngle, rightNavXTurnToAngle, startingSideSwitch));
+//        addSequential(NavXTurnToAngleCommand);
         addSequential(toLoadFwdCommand);
         addSequential(new SolenoidForward(hatchMech));
         addSequential(new ConditionalCommandDigitalInputBased(leftLoadToRevCommand, rightLoadToRevCommand, startingSideSwitch));

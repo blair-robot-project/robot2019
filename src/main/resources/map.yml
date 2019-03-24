@@ -299,13 +299,13 @@ logger:
     - org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP:
         <<: *gyroMP
         '@id': leftCargoShipToLoadRev
-        left:
-          '@id': leftCargoShipToLoadRevLeft
+        right:
+          '@id': leftCargoShipToLoadRevRight
           filename: "/home/lvuser/449_resources/robot2019LeftFLToLoadRevProfile.csv"
           inverted: true
           resetPosition: true
-        right:
-          '@id': leftCargoShipToLoadRevRight
+        left:
+          '@id': leftCargoShipToLoadRevLeft
           filename: "/home/lvuser/449_resources/robot2019RightFLToLoadRevProfile.csv"
           inverted: true
           resetPosition: true
@@ -313,13 +313,13 @@ logger:
     - org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP:
         <<: *gyroMP
         '@id': rightCargoShipToLoadRev
-        left:
-          '@id': rightCargoShipToLoadRevLeft
+        right:
+          '@id': rightCargoShipToLoadRevRight
           filename: "/home/lvuser/449_resources/robot2019LeftFRToLoadRevProfile.csv"
           inverted: true
           resetPosition: true
-        right:
-          '@id': rightCargoShipToLoadRevRight
+        left:
+          '@id': rightCargoShipToLoadRevLeft
           filename: "/home/lvuser/449_resources/robot2019RightFRToLoadRevProfile.csv"
           inverted: true
           resetPosition: true
@@ -341,13 +341,13 @@ logger:
     - org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP:
         <<: *gyroMP
         '@id': leftLoadToCargoShipRev
-        left:
-          '@id': leftLoadToCargoShipRevLeft
+        right:
+          '@id': leftLoadToCargoShipRevRight
           filename: "/home/lvuser/449_resources/robot2019LeftLoadToLeftRevProfile.csv"
           inverted: true
           resetPosition: true
-        right:
-          '@id': leftLoadToCargoShipRevRight
+        left:
+          '@id': leftLoadToCargoShipRevLeft
           filename: "/home/lvuser/449_resources/robot2019RightLoadToLeftRevProfile.csv"
           inverted: true
           resetPosition: true
@@ -355,13 +355,13 @@ logger:
     - org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP:
         <<: *gyroMP
         '@id': rightLoadToCargoShipRev
-        left:
-          '@id': rightLoadToCargoShipRevLeft
+        right:
+          '@id': rightLoadToCargoShipRevRight
           filename: "/home/lvuser/449_resources/robot2019LeftLoadToRightRevProfile.csv"
           inverted: true
           resetPosition: true
-        right:
-          '@id': rightLoadToCargoShipRevRight
+        left:
+          '@id': rightLoadToCargoShipRevLeft
           filename: "/home/lvuser/449_resources/robot2019RightLoadToRightRevProfile.csv"
           inverted: true
           resetPosition: true
@@ -916,21 +916,15 @@ buttons:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: leftLoadToCargoShipRev
           rightLoadToRevCommand:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP: rightLoadToCargoShipRev
-          leftNavXTurnToAngle:
+          NavXTurnToAngleCommand:
             org.usfirst.frc.team449.robot.commands.multiInterface.drive.NavXTurnToAngle:
-              &autoTurn
-              '@id': autoToLoadLeftTurn
-              setpoint: 90
+              '@id': autoToLoadTurn
+              setpoint: 180
               subsystem:
                 org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable:
                   drive
               timeout: 2
-              absoluteTolerance: 2
-          rightNavXTurnToAngle:
-            org.usfirst.frc.team449.robot.commands.multiInterface.drive.NavXTurnToAngle:
-              <<: *autoTurn
-              '@id': autoToLoadRightTurn
-              setpoint: -90
+              absoluteTolerance: 1
           startingSideSwitch:
             org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput: digitalInput
       action: WHEN_PRESSED
