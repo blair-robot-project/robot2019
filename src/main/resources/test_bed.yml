@@ -295,7 +295,7 @@ defaultCommands:
           motor:
             org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
               '@id': cargoArmPivotMotor
-              port: 10
+              port: 7
               enableBrakeMode: false
               reverseOutput: false
               enableVoltageComp: true
@@ -409,35 +409,110 @@ buttons:
             drive
     action: WHEN_PRESSED
   - button:
-        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
-            '@id': stabberButton #solenoid
-            joystick:
-                org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
-                    driverGamepad
-            buttonNumber: 1
+      org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+        '@id': stabberButton #solenoid
+        joystick:
+          org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+            driverGamepad
+        buttonNumber: 1
     command:
-        org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
-            '@id': stabberCommand
-            subsystem:
-                org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
-                    '@id': stabber
-                    piston:
-                        '@id': stabberSolenoid
-                        module: 0
-                        forward: 4
-                        reverse: 5
+      org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
+        '@id': stabberCommand
+        subsystem:
+          org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
+            '@id': stabber
+            piston:
+              '@id': stabberSolenoid
+              module: 0
+              forward: 4
+              reverse: 5
     action: WHEN_PRESSED
   - button:
-        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
-            '@id': retractStabberButton #solenoid
-            joystick:
-                org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
-                    driverGamepad
-            buttonNumber: 2
+      org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+        '@id': retractStabberButton #solenoid
+        joystick:
+          org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+            driverGamepad
+        buttonNumber: 2
     command:
-        org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
-            '@id': retractStabberCommand
-            subsystem:
-                org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
-                    stabber
+      org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
+        '@id': retractStabberCommand
+        subsystem:
+          org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
+            stabber
     action: WHEN_PRESSED
+  #Intake button
+  - button:
+      org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+        '@id': cargoGroundIntake
+        joystick:
+          org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+            mechanismsGamepad
+        buttonNumber: 2
+    command:
+      org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
+        '@id': cargoIntakeCommand
+        subsystem:
+          org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+          '@id': cargoIntake
+          motor:
+            org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.MappedVictorSPX:
+              '@id': cargoIntakeMotor
+              port: 5
+              enableBrakeMode: false
+              inverted: false
+              enableVoltageComp: true
+        inFastVel: -1
+        inSlowVel: -0.2
+        outFastVel: 1
+        mode: IN_FAST
+    action: WHEN_PRESSED
+#iNTAKEoFF
+  - button:
+      org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+        cargoGroundIntake
+    command:
+      org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
+        '@id': stopIntakeCommand
+        subsystem:
+          org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+            cargoIntake
+        inFastVel: -1
+        inSlowVel: -0.2
+        outFastVel: 1
+        mode: OFF
+    action: WHEN_RELEASED
+  #Output
+  - button:
+      org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+        '@id': cargoGroundOutput
+        joystick:
+          org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+            mechanismsGamepad
+      buttonNumber: 3
+    command:
+      org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
+        '@id': cargoOutputCommand
+        subsystem:
+          org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+            cargoIntake
+        inFastVel: -1
+        inSlowVel: -0.2
+        outFastVel: 1
+        mode: OUT_FAST
+    action: WHEN_PRESSED
+  #Stop Output
+  - button:
+      org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+        cargoGroundOutput
+    command:
+        org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
+          '@id': stopOutputCommand
+          subsystem:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+              cargoIntake
+          inFastVel: -1
+          inSlowVel: -0.2
+          outFastVel: 1
+          mode: OFF
+    action: WHEN_RELEASED
