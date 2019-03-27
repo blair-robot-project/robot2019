@@ -12,17 +12,17 @@ public class FeedForwardKaKvComponent extends FeedForwardComponent {
     /**
      * The voltage required to run forwards or backwards at a steady-state velocity of 1 foot per second.
      */
-    private final double kVFwd, kVRev;
+    protected final double kVFwd, kVRev;
 
     /**
      * The voltage required to accelerate the robot at one foot per second^2 while going forwards or backwards.
      */
-    private final double kAFwd, kARev;
+    protected final double kAFwd, kARev;
 
     /**
      * The voltage required to overcome static friction in the forwards or backwards direction.
      */
-    private final double interceptVoltageFwd, interceptVoltageRev;
+    protected final double interceptVoltageFwd, interceptVoltageRev;
 
     /**
      * The difference between the current motor position and the desired one. Field to avoid garbage collection.
