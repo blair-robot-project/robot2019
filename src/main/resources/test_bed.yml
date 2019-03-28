@@ -259,6 +259,16 @@ logger:
       encoderCPR: 1024
       # 22:60 sprocket sizes
       postEncoderGearing: 0.3666666666666666666666
+      perGearSettings:
+        - maxSpeed: 1
+          posKP: 0.0
+          posKD: 0.0
+          feedForwardComponent:
+            org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.feedForwardComponent.FeedForwardArmComponent:
+              kVFwd: 8.223
+              interceptVoltageFwd: 0.6722
+              cosTerm: 2.1098
+              startingAngle: -15
 defaultCommands:
     - subsystem:
         org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable:
@@ -294,7 +304,7 @@ defaultCommands:
               kI: 0
               kD: 0.0
     - subsystem:
-        org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+        org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorRawPosition:
           '@id': cargoArmPivot
           motor:
             org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
@@ -303,7 +313,7 @@ defaultCommands:
         org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.commands.ControlAnalogMotorWithThrottle:
           '@id': cargoArmPivotCommand
           subsystem:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorRawPosition:
               cargoArmPivot
           throttle:
             org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
@@ -450,7 +460,7 @@ buttons:
           org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
             '@id': mechanismsGamepad
             port: 2
-        buttonNumber: 2
+        buttonNumber: 1
     command:
       org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
         '@id': cargoIntakeCommand
@@ -488,7 +498,7 @@ buttons:
         joystick:
           org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
             mechanismsGamepad
-        buttonNumber: 3
+        buttonNumber: 2
     command:
       org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
         '@id': cargoOutputCommand
@@ -509,3 +519,48 @@ buttons:
               cargoIntake
           mode: "OFF"
     action: WHEN_RELEASED
+  #Raise Arm
+  - button:
+      org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+        '@id': raiseArmButton
+        joystick:
+          org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+            mechanismsGamepad
+          buttonNumber: 3
+    command:
+      org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.StayAtPosition:
+        '@id': raiseArm
+        subsystem:
+          org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+            '@id': cargoArmPivot
+            talon:
+              org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+                cargoArmPivotMotor
+            onTargetTolerance: 0.01
+        # (90 + 15)/360
+        setpoint: 0.2917
+      action: WHEN_PRESSED
+  - button:
+      org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+        '@id': lowerArmButton
+        joystick:
+          org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+            mechanismsGamepad
+          buttonNumber: 4
+    command:
+      org.usfirst.frc.team449.robot.commands.general.CommandSequence:
+        '@id': lowerArmSequence
+        commandList:
+          - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.GoToPosition:
+              '@id': lowerArm
+              subsystem:
+                org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+                  cargoArmPivot
+              # 15/360
+              setpoint: 0.01
+          - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.DisableMotor:
+              '@id': disableArm
+              subsystem:
+                org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+                  cargoArmPivot
+      action: WHEN_PRESSED
