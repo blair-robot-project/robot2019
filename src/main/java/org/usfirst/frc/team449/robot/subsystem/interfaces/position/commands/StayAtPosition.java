@@ -47,15 +47,11 @@ public class StayAtPosition<T extends Subsystem & SubsystemPosition> extends Com
     @Override
     protected void initialize() {
         Logger.addEvent("GoToPosition init.", this.getClass());
-        subsystem.setPositionSetpoint(setpoint);
     }
 
-    /**
-     * Does nothing, don't want to spam position setpoints.
-     */
     @Override
     protected void execute() {
-        // Do nothing
+        subsystem.setPositionSetpoint(setpoint);
     }
 
     /**
