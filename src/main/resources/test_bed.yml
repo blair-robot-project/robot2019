@@ -229,7 +229,7 @@ logger:
   - org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
         '@id': LimeLightMotor
         name: "LimeLightPos"
-        port: 7
+        port: 8
         enableBrakeMode: true
         enableVoltageComp: true
         reverseSensor: false
@@ -246,6 +246,19 @@ logger:
                 org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.feedForwardComponent.FeedForwardKaKvComponent:
                     kVFwd: 0.36
                     interceptVoltageFwd: 0.6
+  - org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+      '@id': cargoArmPivotMotor
+      port: 7
+      name: "arm"
+      enableBrakeMode: false
+      reverseOutput: true
+      reverseSensor: true
+      enableVoltageComp: true
+      currentLimit: 30
+      feedbackDevice: QuadEncoder
+      encoderCPR: 1024
+      # 22:60 sprocket sizes
+      postEncoderGearing: 0.3666666666666666666666
 defaultCommands:
     - subsystem:
         org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable:
@@ -285,12 +298,7 @@ defaultCommands:
           '@id': cargoArmPivot
           motor:
             org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
-              '@id': cargoArmPivotMotor
-              port: 7
-              enableBrakeMode: false
-              reverseOutput: false
-              enableVoltageComp: true
-              currentLimit: 30
+              cargoArmPivotMotor
       command:
         org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.commands.ControlAnalogMotorWithThrottle:
           '@id': cargoArmPivotCommand
@@ -327,37 +335,37 @@ teleopStartupCommand:
     subsystem:
       org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
         pneumatics
-autoStartupCommand:
-  org.usfirst.frc.team449.robot.commands.general.CommandSequence:
-    '@id': auto
-    commandList:
-      - org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.SetHeading:
-          '@id': resetNavX
-          subsystem:
-            org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable: drive
-      - org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP:
-          '@id': FLtoLoad
-          absoluteTolerance: 2
-          deadband: 2
-          inverted: false
-          kP: 0.04
-#          kI: 0.0
-          kD: 0.03
-          timeout: 15
-          subsystem:
-            org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable: drive
-          left:
-            '@id': LeftFLtoLoad
-            filename: "/home/lvuser/449_resources/robot2019LeftStartToLFProfile.csv"
-            inverted: false
-            resetPosition: true
-          right:
-            '@id': RightFLtoLoad
-            filename: "/home/lvuser/449_resources/robot2019RightStartToLFProfile.csv"
-            inverted: false
-            resetPosition: true
-      - org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXDefaultDrive:
-          defaultDriveCommand
+#autoStartupCommand:
+#  org.usfirst.frc.team449.robot.commands.general.CommandSequence:
+#    '@id': auto
+#    commandList:
+#      - org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.SetHeading:
+#          '@id': resetNavX
+#          subsystem:
+#            org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable: drive
+#      - org.usfirst.frc.team449.robot.commands.multiInterface.RunGyroStabilizedMP:
+#          '@id': FLtoLoad
+#          absoluteTolerance: 2
+#          deadband: 2
+#          inverted: false
+#          kP: 0.04
+##          kI: 0.0
+#          kD: 0.03
+#          timeout: 15
+#          subsystem:
+#            org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable: drive
+#          left:
+#            '@id': LeftFLtoLoad
+#            filename: "/home/lvuser/449_resources/robot2019LeftStartToLFProfile.csv"
+#            inverted: false
+#            resetPosition: true
+#          right:
+#            '@id': RightFLtoLoad
+#            filename: "/home/lvuser/449_resources/robot2019RightStartToLFProfile.csv"
+#            inverted: false
+#            resetPosition: true
+#      - org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXDefaultDrive:
+#          defaultDriveCommand
 updater:
   org.usfirst.frc.team449.robot.other.Updater:
     '@id': updater
@@ -370,6 +378,8 @@ updater:
         navX
     - org.usfirst.frc.team449.robot.jacksonWrappers.PDP:
         PDP
+    - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+        cargoArmPivotThrottle
 buttons:
   - button:
       org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
@@ -438,25 +448,26 @@ buttons:
         '@id': cargoGroundIntake
         joystick:
           org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
-            mechanismsGamepad
+            '@id': mechanismsGamepad
+            port: 2
         buttonNumber: 2
     command:
       org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
         '@id': cargoIntakeCommand
         subsystem:
-          org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
-          '@id': cargoIntake
-          motor:
-            org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.MappedVictorSPX:
-              '@id': cargoIntakeMotor
-              port: 5
-              enableBrakeMode: false
-              inverted: false
-              enableVoltageComp: true
-        inFastVel: -1
-        inSlowVel: -0.2
-        outFastVel: 1
-        mode: IN_FAST
+          org.usfirst.frc.team449.robot.subsystem.interfaces.intake.IntakeSimple:
+            '@id': cargoIntake
+            motor:
+              org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.MappedVictorSPX:
+                '@id': cargoIntakeMotor
+                port: 5
+                brakeMode: true
+                inverted: false
+                enableVoltageComp: true
+            inFastVel: -1
+            inSlowVel: -0.2
+            outFastVel: 1
+        mode: IN_SLOW
     action: WHEN_PRESSED
 #iNTAKEoFF
   - button:
@@ -466,12 +477,9 @@ buttons:
       org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
         '@id': stopIntakeCommand
         subsystem:
-          org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+          org.usfirst.frc.team449.robot.subsystem.interfaces.intake.IntakeSimple:
             cargoIntake
-        inFastVel: -1
-        inSlowVel: -0.2
-        outFastVel: 1
-        mode: OFF
+        mode: "OFF"
     action: WHEN_RELEASED
   #Output
   - button:
@@ -480,16 +488,13 @@ buttons:
         joystick:
           org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
             mechanismsGamepad
-      buttonNumber: 3
+        buttonNumber: 3
     command:
       org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
         '@id': cargoOutputCommand
         subsystem:
-          org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+          org.usfirst.frc.team449.robot.subsystem.interfaces.intake.IntakeSimple:
             cargoIntake
-        inFastVel: -1
-        inSlowVel: -0.2
-        outFastVel: 1
         mode: OUT_FAST
     action: WHEN_PRESSED
   #Stop Output
@@ -500,10 +505,7 @@ buttons:
         org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
           '@id': stopOutputCommand
           subsystem:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorSimple:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.intake.IntakeSimple:
               cargoIntake
-          inFastVel: -1
-          inSlowVel: -0.2
-          outFastVel: 1
-          mode: OFF
+          mode: "OFF"
     action: WHEN_RELEASED
