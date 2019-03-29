@@ -25,6 +25,8 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.conditional.IRWithButt
 import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.IntakeSimple;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPosition;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.StayAtPosition;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SubsystemSolenoid;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse;
@@ -36,7 +38,7 @@ import org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.c
  * Run a full 2019 climb sequence.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class Climb<T extends Subsystem & SubsystemAnalogMotor> extends CommandGroup {
+public class Climb<T extends Subsystem & SubsystemAnalogMotor, U extends Subsystem & SubsystemIntake, V extends Subsystem & SubsystemPosition> extends CommandGroup {
 
 	/**
 	 * Default constructor.
@@ -72,8 +74,9 @@ public class Climb<T extends Subsystem & SubsystemAnalogMotor> extends CommandGr
 	             @JsonProperty(required = true) @NotNull DriveUnidirectionalWithGyro drive,
 	             @JsonProperty(required = true) @NotNull SubsystemSolenoid hatchExtender,
 	             @JsonProperty(required = true) @NotNull T sliderMotor,
-	             @JsonProperty(required = true) @NotNull SubsystemSolenoid cargoArm,
-	             @JsonProperty(required = true) @NotNull IntakeSimple cargoIntake,
+	             @Nullable SubsystemSolenoid cargoArmSolenoid,
+	             @Nullable V cargoArm,
+	             @JsonProperty(required = true) @NotNull U cargoIntake,
 	             @JsonProperty(required = true) Pneumatics pneumatics,
 	             @JsonProperty(required = true) double maxVelExtend,
 	             @JsonProperty(required = true) double maxAccelExtend,
@@ -105,7 +108,14 @@ public class Climb<T extends Subsystem & SubsystemAnalogMotor> extends CommandGr
 		}
 
 		SolenoidReverse extendHatch = new SolenoidReverse(hatchExtender);
-		SolenoidReverse retractCargo = new SolenoidReverse(cargoArm);
+
+		SolenoidReverse retractCargo = null;
+		StayAtPosition raiseCargo = null;
+		if (cargoArmSolenoid != null) {
+			retractCargo = new SolenoidReverse(cargoArmSolenoid);
+		} else if (cargoArm != null) {
+			raiseCargo = new StayAtPosition<>(cargoArm, 0);
+		}
 		SetIntakeMode stopIntakingCargo = new SetIntakeMode<>(cargoIntake, SubsystemIntake.IntakeMode.OFF);
 		RequireSubsystem stopSlider = new RequireSubsystem(sliderMotor); //sliderMotor
 		StopCompressor stopCompressor = pneumatics == null ? null : new StopCompressor(pneumatics);
@@ -149,7 +159,11 @@ public class Climb<T extends Subsystem & SubsystemAnalogMotor> extends CommandGr
 				-nudge3Distance, drive);
 
 		addSequential(extendHatch);
-		/*addParallel(retractCargo);
+		/*if (retractCargo != null) {
+			addParallel(retractCargo);
+		} else if (raiseCargo != null) {
+			addParallel(raiseCargo);
+		}
 		addParallel(stopIntakingCargo);
 		if (stopCompressor != null) {
 			addParallel(stopCompressor);

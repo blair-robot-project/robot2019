@@ -356,20 +356,6 @@ teleopStartupCommand:
 #            resetPosition: true
 #      - org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXDefaultDrive:
 #          defaultDriveCommand
-updater:
-  org.usfirst.frc.team449.robot.other.Updater:
-    '@id': updater
-    updatables:
-    - org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable:
-        drive
-    - org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
-        oi
-    - org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS:
-        navX
-    - org.usfirst.frc.team449.robot.jacksonWrappers.PDP:
-        PDP
-#    - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
-#        cargoArmPivotThrottle
 buttons:
   - button:
       org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
@@ -548,3 +534,19 @@ buttons:
                 org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
                   cargoArmPivot
     action: WHEN_PRESSED
+updater:
+  org.usfirst.frc.team449.robot.other.Updater:
+    '@id': updater
+    updatables:
+      - org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable:
+          drive
+      - org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+          oi
+      - org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS:
+          navX
+      - org.usfirst.frc.team449.robot.jacksonWrappers.PDP:
+          PDP
+      - org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeurrentLimited:
+          cargoIntake
+#    - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+#        cargoArmPivotThrottle

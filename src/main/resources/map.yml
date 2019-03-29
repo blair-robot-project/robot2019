@@ -408,6 +408,37 @@ logger:
               org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.feedForwardComponent.FeedForwardKaKvComponent:
                 kVFwd: 0.89457
                 interceptVoltageFwd: 3.1415
+    - org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+        '@id': cargoArmPivotMotor
+        port: 9
+        name: "arm"
+        enableBrakeMode: true
+        reverseOutput: true
+        reverseSensor: true
+        enableVoltageComp: true
+        currentLimit: 30
+        feedbackDevice: QuadEncoder
+        encoderCPR: 1024
+        # 22:60 sprocket sizes
+        postEncoderGearing: 0.3666666666666666666666
+        perGearSettings:
+          - maxSpeed: 1
+            posKP: 0.5
+            posKD: 0.0
+            feedForwardComponent:
+              org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.feedForwardComponent.FeedForwardArmComponent:
+                kVFwd: 8.223
+#                interceptVoltageFwd: 0.6722
+                cosTerm: 2.1098
+                startingAngle: 0
+    - org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+        '@id': cargoMotor
+        name: "cargo"
+        port: 11
+        enableBrakeMode: true
+        enableVoltageComp: true
+        currentLimit: 30
+        reverseOutput: false
 defaultCommands:
   - subsystem:
       org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable:
@@ -610,110 +641,130 @@ buttons:
           '@id': enableLimelight
           track: true
       action: WHEN_PRESSED
+#Raise Arm
     - button:
         org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
-          '@id': cargoIntakeButton
+          '@id': raiseArmButton
+          joystick:
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+              mechanismsGamepad
+          buttonNumber: 5
+      command:
+        org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.StayAtPosition:
+          '@id': raiseArm
+          subsystem:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+              '@id': cargoArmPivot
+              talon:
+                org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+                  cargoArmPivotMotor
+              onTargetTolerance: 0.01
+          # (90 + 15)/360
+          setpoint: 0.25
+      action: WHEN_PRESSED
+    - button:
+        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+          '@id': lowerArmButton
+          joystick:
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+              mechanismsGamepad
+          buttonNumber: 6
+      command:
+        org.usfirst.frc.team449.robot.commands.general.CommandSequence:
+          '@id': lowerArmSequence
+          commandList:
+            - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.GoToPosition:
+                &lowerArmCommand
+                '@id': lowerArm
+                subsystem:
+                  org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+                    cargoArmPivot
+                # 15/360
+                setpoint: 0.03
+                minTime: 0.2
+                timeout: 1
+            - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.DisableMotor:
+                '@id': disableArm
+                subsystem:
+                  org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+                    cargoArmPivot
+      action: WHEN_PRESSED
+  #Intake button
+    - button:
+        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+          '@id': cargoGroundIntake
           joystick:
             org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
               mechanismsGamepad
           buttonNumber: 3
       command:
-        org.usfirst.frc.team449.robot.commands.general.CommandSequence:
-          '@id': lowerArmAndIntake
-          commandList:
-            - org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
-                '@id': cargoIntakeCommand
-                subsystem:
-                  org.usfirst.frc.team449.robot.subsystem.interfaces.intake.IntakeSimple:
-                    '@id': cargoSubsystem
-                    motor:
-                      org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
-                        '@id': cargoMotor
-                        port: 11
-                        enableBrakeMode: false
-                        enableVoltageComp: true
-                        currentLimit: 30
-                        reverseOutput: false
-                    inFastVel: -1
-                    inSlowVel: -0.2
-                    outFastVel: 1
-                mode: IN_FAST
-            - org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
-                '@id': cargoArmDownCommand1
-                subsystem:
-                  org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
-                    '@id': cargoArmSolenoid
-                    piston:
-                      '@id': cargoArmPiston
-                      module: 1
-                      forward: 3
-                      reverse: 2
+        command:
+          org.usfirst.frc.team449.robot.commands.general.CommandSequence:
+            '@id': lowerArmAndIntake
+            commandList:
+              - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.GoToPosition:
+                  <<: *lowerArmCommand
+                  '@id': lowerArmAndIntakeLowerArm
+              - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.DisableMotor:
+                  '@id': lowerArmAndIntakeDisableArm
+                  subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+                      cargoArmPivot
+              - org.usfirst.frc.team449.robot.commands.multiInterface.IntakeUntilConditionMet:
+                  '@id': cargoIntakeCommand
+                  subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeurrentLimited:
+                      '@id': cargoIntake
+                      motor:
+                        org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+                          cargoMotor
+                      inFastVel: -0.4
+                      inSlowVel: -0.1
+                      outFastVel: 0.7
+                      currentLimit: 10
+                  intakeMode: IN_FAST
+                  stopMode: "OFF"
       action: WHEN_PRESSED
+  #iNTAKEoFF
     - button:
         org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
-          cargoIntakeButton
+          cargoGroundIntake
       command:
         org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
-          '@id': cargoIntakeOff
+          '@id': stopIntakeCommand
           subsystem:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.intake.IntakeSimple:
-             cargoSubsystem
-          mode: IN_SLOW
+            org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeurrentLimited:
+              cargoIntake
+          mode: "OFF"
       action: WHEN_RELEASED
+  #Output
     - button:
         org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
-          '@id': cargoOutButton
+          '@id': cargoGroundOutput
           joystick:
             org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
               mechanismsGamepad
           buttonNumber: 4
       command:
         org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
-          '@id': cargoOutCommand
+          '@id': cargoOutputCommand
           subsystem:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.intake.IntakeSimple:
-              cargoSubsystem
+            org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeurrentLimited:
+              cargoIntake
           mode: OUT_FAST
       action: WHEN_PRESSED
+  #Stop Output
     - button:
         org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
-          cargoOutButton
+          cargoGroundOutput
       command:
         org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
-          '@id': cargoOutOff
+          '@id': stopOutputCommand
           subsystem:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.intake.IntakeSimple:
-              cargoSubsystem
+            org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeurrentLimited:
+              cargoIntake
           mode: "OFF"
       action: WHEN_RELEASED
-    - button:
-        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
-          '@id': cargoArmUpButton
-          joystick:
-            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
-              mechanismsGamepad
-          buttonNumber: 5
-      command:
-        org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
-          '@id': cargoArmUpCommand
-          subsystem:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
-              cargoArmSolenoid
-      action: WHEN_PRESSED
-    - button:
-        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
-          '@id': cargoArmDownButton
-          joystick:
-            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
-              mechanismsGamepad
-          buttonNumber: 6
-      command:
-        org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
-          '@id': cargoArmDownCommand
-          subsystem:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
-              cargoArmSolenoid
-      action: WHEN_PRESSED
     - button:
         org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
           '@id': climbButtonLevel3
@@ -758,9 +809,9 @@ buttons:
           sliderMotor:
             org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorRawPosition:
               sliderMotor
-          cargoArm:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
-              cargoArmSolenoid
+#          cargoArm:
+#            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
+#              cargoArmSolenoid
           cargoIntake:
             org.usfirst.frc.team449.robot.subsystem.interfaces.intake.IntakeSimple:
               cargoSubsystem
@@ -934,3 +985,4 @@ updater:
       - org.usfirst.frc.team449.robot.jacksonWrappers.PDP: PDP
       - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic: mechRightTrigger
       - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic: mechLeftTrigger
+      - org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeurrentLimited: cargoIntake
