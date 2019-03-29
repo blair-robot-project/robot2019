@@ -430,7 +430,7 @@ logger:
                 kVFwd: 8.223
 #                interceptVoltageFwd: 0.6722
                 cosTerm: 2.1098
-                startingAngle: 0
+                startingAngle: 91.2
     - org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
         '@id': cargoMotor
         name: "cargo"
@@ -660,7 +660,7 @@ buttons:
                   cargoArmPivotMotor
               onTargetTolerance: 0.01
           # (90 + 15)/360
-          setpoint: 0.25
+          setpoint: 0.0
       action: WHEN_PRESSED
     - button:
         org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
@@ -680,7 +680,7 @@ buttons:
                   org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
                     cargoArmPivot
                 # 15/360
-                setpoint: 0.03
+                setpoint: -0.24
                 minTime: 0.2
                 timeout: 1
             - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.DisableMotor:
