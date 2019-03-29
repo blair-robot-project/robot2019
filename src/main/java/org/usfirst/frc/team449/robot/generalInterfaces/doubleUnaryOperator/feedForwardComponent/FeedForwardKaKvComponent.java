@@ -86,7 +86,7 @@ public class FeedForwardKaKvComponent extends FeedForwardComponent {
      */
     @Override
     public double applyAsDouble(double operand) {
-        posDifference = talon.getPositionFeet() - operand;
+        posDifference = operand - talon.getPositionFeet();
         if (posDifference == 0) {
             return 0;
         } else if (posDifference > 0) {

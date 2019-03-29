@@ -538,6 +538,8 @@ buttons:
                   cargoArmPivot
               # 15/360
               setpoint: 0.03
+              minTime: 0.2
+              timeout: 1
           - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.DisableMotor:
               '@id': disableArm
               subsystem:

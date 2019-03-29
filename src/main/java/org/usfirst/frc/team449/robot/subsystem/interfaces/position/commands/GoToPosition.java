@@ -28,6 +28,10 @@ public class GoToPosition<T extends Subsystem & SubsystemPosition> extends Comma
      */
     private double setpoint;
 
+    private final Long timeout;
+
+    private final long minTime;
+
     private long startTime;
 
     /**
@@ -38,10 +42,14 @@ public class GoToPosition<T extends Subsystem & SubsystemPosition> extends Comma
      */
     @JsonCreator
     public GoToPosition(@NotNull @JsonProperty(required = true) T subsystem,
-                        @JsonProperty(required = true) double setpoint) {
+                        @JsonProperty(required = true) double setpoint,
+                        double minTime,
+                        Double timeout) {
         requires(subsystem);
         this.subsystem = subsystem;
         this.setpoint = setpoint;
+        this.minTime = (long) (minTime * 1000.);
+        this.timeout = timeout == null ? null : (long) (timeout * 1000.);
     }
 
     /**
@@ -60,13 +68,14 @@ public class GoToPosition<T extends Subsystem & SubsystemPosition> extends Comma
     }
 
     /**
-     * Exit when the setpoint has been reached
+     * Exit when the setpoint has been reached or the timeout has been exceeded.
      *
      * @return true if the setpoint is reached, false otherwise.
      */
     @Override
     protected boolean isFinished() {
-        return subsystem.onTarget() && Clock.currentTimeMillis() != startTime;
+        return (subsystem.onTarget() && Clock.currentTimeMillis() - startTime > minTime) ||
+                (timeout != null && Clock.currentTimeMillis() - startTime > timeout);
     }
 
     /**
