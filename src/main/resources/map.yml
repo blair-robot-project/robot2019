@@ -425,11 +425,13 @@ logger:
           - maxSpeed: 1
             posKP: 0.5
             posKD: 0.0
+            motionMagicMaxVel: 0.5
+            motionMagicMaxAccel: 0.8
             feedForwardComponent:
               org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.feedForwardComponent.FeedForwardArmComponent:
                 kVFwd: 8.223
-#                interceptVoltageFwd: 0.6722
-                cosTerm: 2.1098
+                interceptVoltageFwd: 0.6722
+                cosTerm: 2.6
                 startingAngle: 91.2
     - org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
         '@id': cargoMotor
@@ -704,7 +706,7 @@ buttons:
                       inFastVel: -0.4
                       inSlowVel: -0.1
                       outFastVel: 0.7
-                      currentLimit: 10
+                      currentLimit: 20
                   intakeMode: IN_FAST
                   stopMode: "OFF"
       action: WHEN_PRESSED
