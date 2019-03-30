@@ -84,6 +84,7 @@ public class GoToPosition<T extends Subsystem & SubsystemPosition> extends Comma
     @Override
     protected void end() {
         Logger.addEvent("GoToPosition end.", this.getClass());
+        subsystem.disableMotor();
     }
 
     /**

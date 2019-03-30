@@ -575,9 +575,8 @@ public class FPSTalon implements SimpleMotor, Shiftable, Loggable {
         setPositionPID();
         canTalon.config_kF(0, 0);
         if (currentGearSettings.getMotionMagicMaxVel() != null) {
-            motionMagicNotifier.stop();
-            canTalon.set(ControlMode.MotionMagic, nativeSetpoint);
-            motionMagicNotifier.startPeriodic(updateMMPeriodSecs);
+            canTalon.set(ControlMode.MotionMagic, nativeSetpoint, DemandType.ArbitraryFeedForward,
+                    currentGearSettings.getFeedForwardComponent().calcMPVoltage(canTalon.getActiveTrajectoryPosition(), canTalon.getActiveTrajectoryVelocity(), 0) / 12.);
         } else {
             canTalon.set(ControlMode.Position, nativeSetpoint, DemandType.ArbitraryFeedForward,
                     currentGearSettings.getFeedForwardComponent().applyAsDouble(feet) / 12.);

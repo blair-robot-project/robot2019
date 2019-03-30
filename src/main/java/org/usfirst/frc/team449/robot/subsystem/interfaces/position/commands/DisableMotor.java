@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPosition;
@@ -13,13 +14,13 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPosi
  * Disable the motors in the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DisableMotor extends Command {
+public class DisableMotor <T extends Subsystem & SubsystemPosition> extends Command {
 
     /**
      * The subsystem to execute this command on.
      */
     @NotNull
-    private final SubsystemPosition subsystem;
+    private final T subsystem;
 
     /**
      * Default constructor
@@ -27,7 +28,8 @@ public class DisableMotor extends Command {
      * @param subsystem The subsystem to execute this command on.
      */
     @JsonCreator
-    public DisableMotor(@NotNull @JsonProperty(required = true) SubsystemPosition subsystem) {
+    public DisableMotor(@NotNull @JsonProperty(required = true) T subsystem) {
+        requires(subsystem);
         this.subsystem = subsystem;
     }
 

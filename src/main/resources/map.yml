@@ -426,11 +426,11 @@ logger:
             posKP: 0.5
             posKD: 0.0
             motionMagicMaxVel: 0.5
-            motionMagicMaxAccel: 0.8
+            motionMagicMaxAccel: 0.1
             feedForwardComponent:
               org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.feedForwardComponent.FeedForwardArmComponent:
                 kVFwd: 8.223
-                interceptVoltageFwd: 0.6722
+#                interceptVoltageFwd: 0.6722
                 cosTerm: 2.6
                 startingAngle: 91.2
     - org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
@@ -662,7 +662,7 @@ buttons:
                   cargoArmPivotMotor
               onTargetTolerance: 0.01
           # (90 + 15)/360
-          setpoint: 0.0
+          setpoint: -0.002
       action: WHEN_PRESSED
     - button:
         org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
@@ -672,11 +672,10 @@ buttons:
               mechanismsGamepad
           buttonNumber: 6
       command:
-        org.usfirst.frc.team449.robot.commands.general.CommandSequence:
-          '@id': lowerArmSequence
-          commandList:
-            - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.GoToPosition:
-                &lowerArmCommand
+#        org.usfirst.frc.team449.robot.commands.general.CommandSequence:
+#          '@id': lowerArmSequence
+#          commandList:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.GoToPosition:
                 '@id': lowerArm
                 subsystem:
                   org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
@@ -685,11 +684,11 @@ buttons:
                 setpoint: -0.252
                 minTime: 0.2
                 timeout: 1
-            - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.DisableMotor:
-                '@id': disableArm
-                subsystem:
-                  org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
-                    cargoArmPivot
+#            - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.DisableMotor:
+#                '@id': disableArm
+#                subsystem:
+#                  org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+#                    cargoArmPivot
       action: WHEN_PRESSED
   #Intake button
     - button:
