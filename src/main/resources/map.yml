@@ -689,26 +689,20 @@ buttons:
               mechanismsGamepad
           buttonNumber: 3
       command:
-          org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
-            '@id': lowerArmAndIntake
-            commandSet:
-              - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.StayAtPosition:
-                  <<: *lowerArmCommand
-                  '@id': lowerArmAndIntakeLowerArm
-              - org.usfirst.frc.team449.robot.commands.multiInterface.IntakeUntilConditonMet:
-                  '@id': cargoIntakeCommand
-                  subsystem:
-                    org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeCurrentLimited:
-                      '@id': cargoIntake
-                      motor:
-                        org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
-                          cargoMotor
-                      inFastVel: -0.4
-                      inSlowVel: -0.1
-                      outFastVel: 0.7
-                      currentLimit: 20
-                  intakeMode: IN_FAST
-                  stopMode: "OFF"
+          org.usfirst.frc.team449.robot.commands.multiInterface.IntakeUntilConditonMet:
+            '@id': cargoIntakeCommand
+            subsystem:
+              org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeCurrentLimited:
+                '@id': cargoIntake
+                motor:
+                  org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+                    cargoMotor
+                inFastVel: -0.4
+                inSlowVel: -0.1
+                outFastVel: 0.7
+                currentLimit: 20
+            intakeMode: IN_FAST
+            stopMode: "OFF"
       action: WHEN_PRESSED
   #iNTAKEoFF
     - button:
