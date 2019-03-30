@@ -672,13 +672,24 @@ buttons:
               mechanismsGamepad
           buttonNumber: 6
       command:
-        org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.StayAtPosition:
-          &lowerArmCommand
-          '@id': lowerArm
-          subsystem:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
-              cargoArmPivot
-          setpoint: -0.252
+        org.usfirst.frc.team449.robot.commands.general.CommandSequence:
+          '@id': lowerArmSequence
+          commandList:
+            - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.GoToPosition:
+                &lowerArmCommand
+                '@id': lowerArm
+                subsystem:
+                  org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+                    cargoArmPivot
+                # 15/360
+                setpoint: -0.252
+                minTime: 0.2
+                timeout: 1
+            - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.DisableMotor:
+                '@id': disableArm
+                subsystem:
+                  org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+                    cargoArmPivot
       action: WHEN_PRESSED
   #Intake button
     - button:
@@ -700,7 +711,7 @@ buttons:
                 inFastVel: -0.4
                 inSlowVel: -0.1
                 outFastVel: 0.7
-                currentLimit: 20
+                currentLimit: 15
             intakeMode: IN_FAST
             stopMode: "OFF"
       action: WHEN_PRESSED
@@ -788,9 +799,9 @@ buttons:
           sliderMotor:
             org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.AnalogMotorRawPosition:
               sliderMotor
-#          cargoArm:
-#            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
-#              cargoArmSolenoid
+          cargoArm:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+              cargoArmPivot
           cargoIntake:
             org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeCurrentLimited:
               cargoIntake
@@ -924,6 +935,9 @@ autoStartupCommand:
           autoshiftComponent
     compressor:
       org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics: pneumatics
+    cargoArm:
+      org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+        cargoArmPivot
 #autoStartupCommand:
 #  org.usfirst.frc.team449.robot.subsystem.interfaces.analogMotor.commands.AnalogMotorVoltageRamp:
 #    '@id': characterizeSlider

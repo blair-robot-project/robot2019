@@ -114,7 +114,7 @@ public class Climb<T extends Subsystem & SubsystemAnalogMotor, U extends Subsyst
 		if (cargoArmSolenoid != null) {
 			retractCargo = new SolenoidReverse(cargoArmSolenoid);
 		} else if (cargoArm != null) {
-			raiseCargo = new StayAtPosition<>(cargoArm, 0);
+			raiseCargo = new StayAtPosition<>(cargoArm, -0.014);
 		}
 		SetIntakeMode stopIntakingCargo = new SetIntakeMode<>(cargoIntake, SubsystemIntake.IntakeMode.OFF);
 		RequireSubsystem stopSlider = new RequireSubsystem(sliderMotor); //sliderMotor
@@ -159,17 +159,17 @@ public class Climb<T extends Subsystem & SubsystemAnalogMotor, U extends Subsyst
 				-nudge3Distance, drive);
 
 		addSequential(extendHatch);
-		/*if (retractCargo != null) {
+		if (retractCargo != null) {
 			addParallel(retractCargo);
 		} else if (raiseCargo != null) {
 			addParallel(raiseCargo);
 		}
-		addParallel(stopIntakingCargo);
+		/*addParallel(stopIntakingCargo);
 		if (stopCompressor != null) {
 			addParallel(stopCompressor);
 		}
-		addSequential(stopSlider);
-		addSequential(pauseForPrep);*/
+		addSequential(stopSlider);*/
+		addSequential(pauseForPrep);
 		if (nudgeBackForBumperLip != null) addSequential(nudgeBackForBumperLip);
 		addSequential(extendLegs);
 		addSequential(stallElevators);

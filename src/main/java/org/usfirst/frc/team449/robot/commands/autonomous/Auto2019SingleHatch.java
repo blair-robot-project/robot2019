@@ -15,6 +15,8 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.SetHeading;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.manual.SubsystemMPManualTwoSides;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPosition;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.StayAtPosition;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SubsystemSolenoid;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse;
@@ -26,7 +28,7 @@ import org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.c
  * Run a command to drive to the cargo bay and drop off a hatch, then give control back to the driver.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class Auto2019SingleHatch<T extends Subsystem & SubsystemAHRS & SubsystemMPManualTwoSides> extends CommandGroup {
+public class Auto2019SingleHatch<T extends Subsystem & SubsystemAHRS & SubsystemMPManualTwoSides, U extends Subsystem & SubsystemPosition> extends CommandGroup {
 
     /**
      * Default constructor.
@@ -50,12 +52,16 @@ public class Auto2019SingleHatch<T extends Subsystem & SubsystemAHRS & Subsystem
                                @NotNull @JsonProperty(required = true) Command rightDriveCommand,
                                @NotNull @JsonProperty(required = true) MappedDigitalInput startingSideSwitch,
                                @NotNull @JsonProperty(required = true) Command driveDefaultCommand,
+                               @Nullable U cargoArm,
                                @Nullable Pneumatics compressor) {
         if (compressor != null) {
             addParallel(new StopCompressor(compressor));
         }
         if (adjustCommand != null) {
             addParallel(adjustCommand);
+        }
+        if (cargoArm != null) {
+            addParallel(new StayAtPosition<>(cargoArm, 0));
         }
         addParallel(new SetTracking(true));
         addParallel(new SolenoidForward(angularCompliance));
