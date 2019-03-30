@@ -55,12 +55,12 @@ public class LowerIntakeRaise<T extends Subsystem & SubsystemIntake & SubsystemS
                             @Nullable SubsystemIntake.IntakeMode carriageHoldMode,
                             @Nullable Boolean raiseIntake) {
         addSequential(new SetSolenoid(actuatedIntake, intakeSolenoidPos));
-        addSequential(new GoToPosition<>(elevator, elevatorIntakePos));
-        addSequential(new SetIntakeMode(actuatedIntake, actuatedIntakeMode));
-        addSequential(new SetIntakeMode(carriage, carriageIntakeMode));
+        addSequential(new GoToPosition<>(elevator, elevatorIntakePos, 0 , null));
+        addSequential(new SetIntakeMode<>(actuatedIntake, actuatedIntakeMode));
+        addSequential(new SetIntakeMode<>(carriage, carriageIntakeMode));
         addSequential(new IntakeUntilConditonMet<>(carriage, carriageIntakeMode, carriageHoldMode));
-        addSequential(new SetIntakeMode(actuatedIntake, SubsystemIntake.IntakeMode.OFF));
-        addSequential(new GoToPosition<>(elevator, elevatorUpPos));
+        addSequential(new SetIntakeMode<>(actuatedIntake, SubsystemIntake.IntakeMode.OFF));
+        addSequential(new GoToPosition<>(elevator, elevatorUpPos, 0, null));
         //Retract the intake by setting the piston to the opposite
         if (raiseIntake != null && raiseIntake) {
             addSequential(new SetSolenoid(actuatedIntake,
