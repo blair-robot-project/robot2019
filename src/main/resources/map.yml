@@ -321,7 +321,7 @@ logger:
           inverted: true
           resetPosition: true
         right:
-          '@id': leftCargoShipToLoadRevRight
+          '@id': rightCargoShipToLoadRevRight
           filename: "/home/lvuser/449_resources/robot2019RightFRToLoadRevProfile.csv"
           inverted: true
           resetPosition: true
@@ -670,24 +670,13 @@ buttons:
               mechanismsGamepad
           buttonNumber: 6
       command:
-        org.usfirst.frc.team449.robot.commands.general.CommandSequence:
-          '@id': lowerArmSequence
-          commandList:
-            - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.GoToPosition:
-                &lowerArmCommand
-                '@id': lowerArm
-                subsystem:
-                  org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
-                    cargoArmPivot
-                # 15/360
-                setpoint: -0.24
-                minTime: 0.2
-                timeout: 1
-            - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.DisableMotor:
-                '@id': disableArm
-                subsystem:
-                  org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
-                    cargoArmPivot
+        org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.StayAtPosition:
+          &lowerArmCommand
+          '@id': lowerArm
+          subsystem:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
+              cargoArmPivot
+          setpoint: -0.252
       action: WHEN_PRESSED
   #Intake button
     - button:
@@ -698,19 +687,13 @@ buttons:
               mechanismsGamepad
           buttonNumber: 3
       command:
-        command:
-          org.usfirst.frc.team449.robot.commands.general.CommandSequence:
+          org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
             '@id': lowerArmAndIntake
-            commandList:
-              - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.GoToPosition:
+            commandSet:
+              - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.StayAtPosition:
                   <<: *lowerArmCommand
                   '@id': lowerArmAndIntakeLowerArm
-              - org.usfirst.frc.team449.robot.subsystem.interfaces.position.commands.DisableMotor:
-                  '@id': lowerArmAndIntakeDisableArm
-                  subsystem:
-                    org.usfirst.frc.team449.robot.subsystem.interfaces.position.SubsystemPositionSimple:
-                      cargoArmPivot
-              - org.usfirst.frc.team449.robot.commands.multiInterface.IntakeUntilConditionMet:
+              - org.usfirst.frc.team449.robot.commands.multiInterface.IntakeUntilConditonMet:
                   '@id': cargoIntakeCommand
                   subsystem:
                     org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeurrentLimited:
