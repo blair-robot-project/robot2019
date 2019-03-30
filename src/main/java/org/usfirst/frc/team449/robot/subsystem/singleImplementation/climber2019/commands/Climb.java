@@ -65,6 +65,7 @@ public class Climb extends CommandGroup {
 	 * @param crawlVelocity     The velocity at which to crawl the leg-drive and drive while the back elevator lifts.
 	 * @param bumperLipAvoidance  How far to back up before climbing.
 	 * @param backLegLipAvoidance How far to back up before retracting the back leg.
+	 * @param partialBackRetraction How far to retract the back elevator at the end of the climb, assuming we're not driving on
 	 */
 	@JsonCreator
 	public Climb(@JsonProperty(required = true) @NotNull SubsystemClimber2019 climber,
@@ -92,7 +93,8 @@ public class Climb extends CommandGroup {
 	             double stallVoltageFront,
 	             double crawlVelocity,
 	             @Nullable Double bumperLipAvoidance,
-	             @Nullable Double backLegLipAvoidance) {
+	             @Nullable Double backLegLipAvoidance,
+	             @Nullable Double partialBackRetraction) {
 		requires(climber);
 		climber.setCrawlVelocity(crawlVelocity * 0.75);
 		
@@ -137,11 +139,15 @@ public class Climb extends CommandGroup {
 		DriveAtSpeed crawlDrive = new DriveAtSpeed<>(drive, -crawlVelocity / 3., 5);
 		TurnMotorOn crawlLeg = new TurnMotorOn(climber);
 
-		DriveLegWheels nudgeBackForBackLegLip = backLegLipAvoidance == null ? null : new DriveLegWheels(maxVelNudge,
-				maxAccelNudge, -backLegLipAvoidance, climber);
+		RunDriveMP nudgeBackForBackLegLip = backLegLipAvoidance == null ? null : new RunDriveMP<>(maxVelNudge,
+				maxAccelNudge, -backLegLipAvoidance, drive);
 
 		RunElevator retractBackLeg = new RunElevator(RunElevator.MoveType.BACK, maxVelRetract, maxAccelRetract,
 				extendDistance, -0.5, 0, 0, 0, null, climber);
+
+		RunElevator partiallyRetractBackLeg = partialBackRetraction == null ? null : new RunElevator(RunElevator.MoveType.BACK,
+				maxVelRetract, maxAccelRetract, extendDistance, extendDistance - partialBackRetraction,
+				0, 0, 0, null, climber);
 
 //		TurnMotorOffWithRequires stopLegCrawl = new TurnMotorOffWithRequires<>(climber);
 
@@ -171,8 +177,12 @@ public class Climb extends CommandGroup {
 		} else {
 			addSequential(nudgeBackForBackLegLip);
 		}
-		addSequential(retractBackLeg);
+		if (partiallyRetractBackLeg == null) {
+			addSequential(retractBackLeg);
+			addSequential(nudgeDriveForwardLegsRetracted);
+		} else {
+			addSequential(partiallyRetractBackLeg);
+		}
 //		addSequential(stopLegCrawl);
-		addSequential(nudgeDriveForwardLegsRetracted);
 	}
 }
