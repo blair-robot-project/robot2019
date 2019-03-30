@@ -1,5 +1,5 @@
 ---
-useCameraServer: true
+useCameraServer: false
 logger:
   '@id': logger
   eventLogFilename: "/home/lvuser/logs/eventLog-"
@@ -696,7 +696,7 @@ buttons:
               - org.usfirst.frc.team449.robot.commands.multiInterface.IntakeUntilConditonMet:
                   '@id': cargoIntakeCommand
                   subsystem:
-                    org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeurrentLimited:
+                    org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeCurrentLimited:
                       '@id': cargoIntake
                       motor:
                         org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
@@ -716,7 +716,7 @@ buttons:
         org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
           '@id': stopIntakeCommand
           subsystem:
-            org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeurrentLimited:
+            org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeCurrentLimited:
               cargoIntake
           mode: "OFF"
       action: WHEN_RELEASED
@@ -732,7 +732,7 @@ buttons:
         org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
           '@id': cargoOutputCommand
           subsystem:
-            org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeurrentLimited:
+            org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeCurrentLimited:
               cargoIntake
           mode: OUT_FAST
       action: WHEN_PRESSED
@@ -744,7 +744,7 @@ buttons:
         org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode:
           '@id': stopOutputCommand
           subsystem:
-            org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeurrentLimited:
+            org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeCurrentLimited:
               cargoIntake
           mode: "OFF"
       action: WHEN_RELEASED
@@ -796,8 +796,8 @@ buttons:
 #            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
 #              cargoArmSolenoid
           cargoIntake:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.intake.IntakeSimple:
-              cargoSubsystem
+            org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeCurrentLimited:
+              cargoIntake
           pneumatics:
             org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
               pneumatics
@@ -968,4 +968,4 @@ updater:
       - org.usfirst.frc.team449.robot.jacksonWrappers.PDP: PDP
       - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic: mechRightTrigger
       - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic: mechLeftTrigger
-      - org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeurrentLimited: cargoIntake
+      - org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeCurrentLimited: cargoIntake
