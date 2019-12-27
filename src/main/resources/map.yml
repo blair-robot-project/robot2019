@@ -940,6 +940,21 @@ autoStartupCommand:
     maxJerk: 16
     deltaTime: 0.02
 #autoStartupCommand:
+#  org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.GoToVisionTargetLimelightRecursive:
+#    '@id': goToVisionTarget
+#    subsystem:
+#      org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectionalWithGyroShiftable:
+#        drive
+#    pathRequester:
+#      '@id': pathRequester
+#      address: "tcp://10.4.49.2:5800"
+#      wheelbase: 2.4
+#    maxVel: 7
+#    maxAccel: 12
+#    maxJerk: 16
+#    deltaTime: 0.02
+#    regenInterval: 1
+#autoStartupCommand:
 #  org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.GetPathFromJetson:
 #    '@id': getPath
 #    pathRequester:

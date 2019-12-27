@@ -51,9 +51,11 @@ public class GoToVisionTargetLimelight<T extends Subsystem & SubsystemMPTwoSides
                                      @JsonProperty(required = true) double maxJerk,
                                      @JsonProperty(required = true) double deltaTime,
                                      double xOffset,
-                                     double yOffset) {
+                                     double yOffset,
+                                     double timeout) {
         this.subsystem = subsystem;
         requires(subsystem);
+        setTimeout(timeout);
         this.table = NetworkTableInstance.getDefault().getTable("limelight");
         GetPathFromJetson getPath = new GetPathFromJetson(pathRequester, null, deltaTime, maxVel, maxAccel, maxJerk,
                 false);
@@ -69,13 +71,10 @@ public class GoToVisionTargetLimelight<T extends Subsystem & SubsystemMPTwoSides
      */
     @NotNull
     private Waypoint[] getWaypoints() {
-        System.out.println("test: " + table.getEntry("tx").getDouble(0));
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         System.out.println("X: " + getX());
         System.out.println("Y: " + getY());
         System.out.println("THETA: " + getTheta());
         Waypoint[] toRet = new Waypoint[1];
-//        toRet[0] = new Waypoint(0,0,0);
         toRet[0] = new Waypoint(getX(), getY(), getTheta());
         return toRet;
     }
@@ -102,5 +101,12 @@ public class GoToVisionTargetLimelight<T extends Subsystem & SubsystemMPTwoSides
      */
     private double getTheta() {
         return Math.toDegrees(table.getEntry("camtran").getDoubleArray(new double[] {0, 0, 0, 0, 0, 0})[4]);
+    }
+
+    /**
+     * @return Whether a pose was received from the Limelight
+     */
+    public boolean wasPoseReceived() {
+        return getX() != 0;
     }
 }

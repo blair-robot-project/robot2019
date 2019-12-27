@@ -141,7 +141,7 @@ public class PathRequester {
         double[][] leftData = leftMotionProfileData.getData();
         double[][] rightData = rightMotionProfileData.getData();
 
-        File pathOutput = new File("/home/lvuser/test/pathOutput.txt");
+        File pathOutput = new File("/home/lvuser/test/pathOutput" + System.currentTimeMillis() + ".txt");
         PrintWriter pathOutputWriter = null;
         try {
             pathOutput.createNewFile();
