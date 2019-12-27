@@ -945,6 +945,9 @@ autoStartupCommand:
   org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.GetPathFromWPI:
     '@id': getPath
     waypoints:
+      - x: 0
+        y: 0
+        theta: 0
       - x: 20
         y: 10
         theta: 5

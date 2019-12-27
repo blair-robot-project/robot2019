@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.components;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -78,6 +79,7 @@ public class PathGeneratorWPI {
             pose2dList.add(new Pose2d(waypoint.getX(), waypoint.getY(), new Rotation2d(waypoint.getThetaRadians())));
         }
 
+        double start = Timer.getFPGATimestamp();
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(pose2dList, new TrajectoryConfig(maxVel, maxAccel));
 
         pos = new ArrayList<>();
@@ -91,6 +93,8 @@ public class PathGeneratorWPI {
             pathOutputWriter = new PrintWriter(pathOutput);
             pathOutputWriter.flush();
         } catch (IOException e) {}
+
+        pathOutputWriter.println(Timer.getFPGATimestamp() - start);
 
         for (double t = 0; t < trajectory.getTotalTimeSeconds(); t += deltaTime) {
             Trajectory.State state = trajectory.sample(t);
