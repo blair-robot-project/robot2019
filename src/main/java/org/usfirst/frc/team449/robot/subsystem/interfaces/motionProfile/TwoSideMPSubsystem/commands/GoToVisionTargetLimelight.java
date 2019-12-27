@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.components.PathRequester;
@@ -22,16 +23,16 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands
 public class GoToVisionTargetLimelight<T extends Subsystem & SubsystemMPTwoSides & SubsystemAHRS> extends CommandGroup {
 
     /**
-     * The subsystem to run the path gotten from the Jetson on.
-     */
-    @NotNull
-    private final T subsystem;
-    /**
      * Network table for pulling info from the Jetson
      */
     private final NetworkTable table;
 
     private final double xOffset, yOffset;
+
+    /**
+     * Whether to run this command repeatedly.
+     */
+    private final boolean adaptive;
 
     /**
      * Default constructor
@@ -42,6 +43,7 @@ public class GoToVisionTargetLimelight<T extends Subsystem & SubsystemMPTwoSides
      * @param maxAccel      The maximum acceleration, in feet/(second^2)
      * @param maxJerk       The maximum jerk, in feet/(second^3)
      * @param deltaTime     The time between setpoints in the profile, in seconds.
+     * @param adaptive      Whether to run this command repeatedly.
      */
     @JsonCreator
     public GoToVisionTargetLimelight(@NotNull @JsonProperty(required = true) T subsystem,
@@ -52,10 +54,8 @@ public class GoToVisionTargetLimelight<T extends Subsystem & SubsystemMPTwoSides
                                      @JsonProperty(required = true) double deltaTime,
                                      double xOffset,
                                      double yOffset,
-                                     double timeout) {
-        this.subsystem = subsystem;
+                                     boolean adaptive) {
         requires(subsystem);
-        setTimeout(timeout);
         this.table = NetworkTableInstance.getDefault().getTable("limelight");
         GetPathFromJetson getPath = new GetPathFromJetson(pathRequester, null, deltaTime, maxVel, maxAccel, maxJerk,
                 false);
@@ -64,6 +64,7 @@ public class GoToVisionTargetLimelight<T extends Subsystem & SubsystemMPTwoSides
         addSequential(goToPositionRelative);
         this.xOffset = xOffset;
         this.yOffset = yOffset;
+        this.adaptive = adaptive;
     }
 
     /**
@@ -108,5 +109,13 @@ public class GoToVisionTargetLimelight<T extends Subsystem & SubsystemMPTwoSides
      */
     public boolean wasPoseReceived() {
         return getX() != 0;
+    }
+
+    @Override
+    protected void end() {
+        if (adaptive) {
+            Scheduler.getInstance().add(this);
+        }
+        super.end();
     }
 }
