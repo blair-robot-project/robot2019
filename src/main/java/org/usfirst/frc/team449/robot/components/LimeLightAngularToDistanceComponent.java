@@ -7,12 +7,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.DoubleSupplier;
 public class LimeLightAngularToDistanceComponent implements DoubleSupplier {
+    /**
+     * The supplier that determines the angle at which the Limelight is positioned
+     */
     @NotNull
     DoubleSupplier angularInput;
-
+    /**
+     * The supplier determining the distance to the vision target
+     */
     @NotNull
     DoubleSupplier distanceToTarget;
 
+    /**
+     * Default constructor
+     * @param angularInput The DoubleSupplier determining the angle theta of the Limelight
+     * @param distanceToTarget The LimeLightComponent finding the distance to the vision target
+     */
     @JsonCreator
     public LimeLightAngularToDistanceComponent(@JsonProperty(required = true) DoubleSupplier angularInput,
                                                @JsonProperty(required = true) DoubleSupplier distanceToTarget){
@@ -20,6 +30,11 @@ public class LimeLightAngularToDistanceComponent implements DoubleSupplier {
         this.distanceToTarget = distanceToTarget;
     }
 
+    /**
+     * Determines the distance from the robot to the vision target using the angle from angularInput and the distance
+     * from
+     * @return
+     */
     @Override
     public double getAsDouble() {
         double theta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
