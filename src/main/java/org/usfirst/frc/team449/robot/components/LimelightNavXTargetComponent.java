@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import java.util.function.DoubleSupplier;
 
+/**
+ * Failed approach to implement Limelight code
+ */
 public class LimelightNavXTargetComponent implements DoubleSupplier {
 
     @NotNull

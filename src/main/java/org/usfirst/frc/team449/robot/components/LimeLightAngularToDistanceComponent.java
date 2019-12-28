@@ -6,6 +6,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.DoubleSupplier;
+
+/**
+ * Finds the distance from the robot to a vision target that is at an angle
+ */
 public class LimeLightAngularToDistanceComponent implements DoubleSupplier {
     /**
      * The supplier that determines the angle at which the Limelight is positioned
@@ -20,7 +24,7 @@ public class LimeLightAngularToDistanceComponent implements DoubleSupplier {
 
     /**
      * Default constructor
-     * @param angularInput The DoubleSupplier determining the angle theta of the Limelight
+     * @param angularInput The DoubleSupplier determining the angle theta of the vision target
      * @param distanceToTarget The LimeLightComponent finding the distance to the vision target
      */
     @JsonCreator
@@ -31,8 +35,7 @@ public class LimeLightAngularToDistanceComponent implements DoubleSupplier {
     }
 
     /**
-     * Determines the distance from the robot to the vision target using the angle from angularInput and the distance
-     * from
+     * Determines the distance from the robot to the vision target using the angle from angularInput
      * @return
      */
     @Override
