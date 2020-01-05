@@ -61,7 +61,7 @@ public class GoToVisionTargetLimelight<T extends Subsystem & SubsystemMPTwoSides
      * @param xOffset       Offset added to x after receiving the raw value from the Limelight.
      * @param yOffset       Offset added to y after receiving the raw value from the Limelight.
      * @param adaptive      Whether to run this command repeatedly.
-     * @param timeout       How long this command is allowed to run. Should be set if using adaptive mode.
+     * @param timeout       How long this command is allowed to run, in seconds. Should be set if using adaptive mode.
      */
     @JsonCreator
     public GoToVisionTargetLimelight(@NotNull @JsonProperty(required = true) T subsystem,
@@ -156,7 +156,8 @@ public class GoToVisionTargetLimelight<T extends Subsystem & SubsystemMPTwoSides
         }
 
         if (adaptive && targetDetected) {
-            Scheduler.getInstance().add(this);
+            start();
+            //Scheduler.getInstance().add(this);
         }
     }
 }

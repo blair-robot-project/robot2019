@@ -939,6 +939,8 @@ autoStartupCommand:
     maxAccel: 12
     maxJerk: 16
     deltaTime: 0.02
+    adaptive: true
+    timeout: 2
 #autoStartupCommand:
 #  org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.GoToVisionTargetLimelightRecursive:
 #    '@id': goToVisionTarget
