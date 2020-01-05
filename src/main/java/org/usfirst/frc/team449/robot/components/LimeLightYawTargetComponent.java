@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.filters.LinearDigitalFilter;
 
 import java.util.function.DoubleSupplier;
 
+/**
+ * Failed approach to implement Limelight code
+ */
 public class LimeLightYawTargetComponent implements DoubleSupplier {
     LimeLightComponent limeLightComponent;
     LinearDigitalFilter filter;

@@ -88,7 +88,7 @@ public class RunGyroStabilizedMP<T extends Subsystem & SubsystemMPManualTwoSides
                                double kP,
                                double kI,
                                double kD,
-                               @JsonProperty(required = true) double timeout,
+                               double timeout,
                                @JsonProperty(required = true) MotionProfileData left,
                                @JsonProperty(required = true) MotionProfileData right,
                                double startAngle) {
