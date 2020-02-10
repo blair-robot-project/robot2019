@@ -178,7 +178,7 @@ logger:
                             3: 1
             invertDPad: false
             dPadShift: 0.1
-            turnInPlaceRotScale: 0.3
+            turnInPlaceRotScale: 0.5
             rescaleOutputs: true
             scaleRotByFwdPoly:
               org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
@@ -240,7 +240,7 @@ logger:
                             3: 1
             invertDPad: false
             dPadShift: 0.1
-            turnInPlaceRotScale: 0.3
+            turnInPlaceRotScale: 0.5
             rescaleOutputs: true
             scaleRotByFwdPoly:
               org.usfirst.frc.team449.robot.generalInterfaces.doubleUnaryOperator.Polynomial:
@@ -300,8 +300,8 @@ logger:
             oi
         autoshiftComponent:
           '@id': autoshiftComponent
-          upshiftSpeed: 4
-          downshiftSpeed: 2.7
+          upshiftSpeed: 2 #4
+          downshiftSpeed: 1.5 #2.7
           upshiftDebouncer:
             '@id': upshiftDebouncer
             bufferTimeSeconds: 0.06
@@ -436,7 +436,7 @@ buttons:
           joystick:
             org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
               driverGamepad
-          buttonNumber: 1
+          buttonNumber: 3
       command:
         org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
           '@id': releaseHatch
