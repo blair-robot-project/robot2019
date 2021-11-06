@@ -1,4 +1,13 @@
 ---
+
+CONSTANTS:
+  - ButtonNumbers:
+      - &overrideButtonNumber 1 # Press A to override
+      - &secureHatchButtonNumber 2 # Press B to secure hatch
+      - &releaseHatchButtonNumber 3 # Press X to release hatch
+      - &retractStabberButtonNumber 4 # Press Y to move stabber backward
+      - &thrustStabberButtonNumber 5 # Press who knows what to move stabber forward
+
 useCameraServer: false
 logger:
   '@id': logger
@@ -255,7 +264,7 @@ logger:
             joystick:
               org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
                 driverGamepad
-            buttonNumber: 1
+            buttonNumber: *overrideButtonNumber
     - org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
         rotThrottle
     - org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
@@ -436,7 +445,7 @@ buttons:
           joystick:
             org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
               driverGamepad
-          buttonNumber: 3
+          buttonNumber: *releaseHatchButtonNumber
       command:
         org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
           '@id': releaseHatch
@@ -455,13 +464,46 @@ buttons:
           joystick:
             org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
               driverGamepad
-          buttonNumber: 2
+          buttonNumber: *secureHatchButtonNumber
       command:
         org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
           '@id': secureHatch
           subsystem:
             org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
               hatchSolenoid
+      action: WHEN_PRESSED
+    - button:
+        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+          '@id': stabberButton #solenoid
+          joystick:
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+              driverGamepad
+          buttonNumber: *thrustStabberButtonNumber
+      command:
+        org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
+          '@id': stabberCommand
+          subsystem:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
+              '@id': stabber
+              piston:
+                '@id': stabberSolenoid
+                module: 0
+                forward: 4
+                reverse: 5
+      action: WHEN_PRESSED
+    - button:
+        org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
+          '@id': retractStabberButton #solenoid
+          joystick:
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+              driverGamepad
+          buttonNumber: *retractStabberButtonNumber
+      command:
+        org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
+          '@id': retractStabberCommand
+          subsystem:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
+              stabber
       action: WHEN_PRESSED
 updater:
   org.usfirst.frc.team449.robot.other.Updater:

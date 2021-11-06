@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +33,15 @@ public class Logger implements Runnable {
      * All loggables added to the Logger outside of the constructor.
      */
     private static List<Loggable> addedLoggables = new ArrayList<>();
+
+    /**
+     * The event log file if this is a simulation
+     */
+    private static String WINDOWS_EVENT_LOG_FILE = "./logs/eventLog-";
+    /**
+     * The telemetry log file if this is a simulation
+     */
+    private static String WINDOWS_TELEMETRY_LOG_FILE = "./logs/telemetryLog-";
 
     /**
      * The file path for the event log.
@@ -123,6 +133,8 @@ public class Logger implements Runnable {
         //Set up the file names, using a time stamp to avoid overwriting old log files.
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
         startTime = System.currentTimeMillis();
+        eventLogFilename = RobotBase.isReal() ? eventLogFilename : WINDOWS_EVENT_LOG_FILE;
+        telemetryLogFilename = RobotBase.isReal() ? telemetryLogFilename : WINDOWS_TELEMETRY_LOG_FILE;
         this.eventLogFilename = eventLogFilename + timeStamp + ".csv";
         this.telemetryLogFilename = telemetryLogFilename + timeStamp + ".csv";
         this.loopTimeMillis = loopTimeMillis;

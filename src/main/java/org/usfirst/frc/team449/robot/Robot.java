@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,8 @@ public class Robot extends TimedRobot {
      * The absolute filepath to the resources folder containing the config files.
      */
     @NotNull
-    public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
+    public static final String RESOURCES_PATH =
+            RobotBase.isReal() ? "/home/lvuser/449_resources/" : "./src/main/resources/";
 
     /**
      * The name of the map to read from. Should be overriden by a subclass to change the name.
